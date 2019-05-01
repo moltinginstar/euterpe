@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launcher_name">Recorder</string>
+    <string name="recorder">Recorder</string>
+    <string name="player">Player</string>
+</resources>

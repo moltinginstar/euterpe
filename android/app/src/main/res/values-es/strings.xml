@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launcher_name">Grabadora</string>
+    <string name="recorder">Grabadora</string>
+    <string name="player">Reproductor</string>
+</resources>

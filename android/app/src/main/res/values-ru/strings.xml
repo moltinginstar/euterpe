@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launcher_name">Диктофон</string>
+    <string name="recorder">Диктофон</string>
+    <string name="player">Проигрыватель</string>
+</resources>

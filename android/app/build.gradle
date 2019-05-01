@@ -1,0 +1,114 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty("flutter.sdk")
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+if (flutterVersionCode == null) {
+    flutterVersionCode = "1"
+}
+
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
+if (flutterVersionName == null) {
+    flutterVersionName = "1.0"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    compileSdkVersion 30
+
+    aaptOptions {
+        ignoreAssetsPattern "!*ffprobe"
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+    }
+
+    lintOptions {
+        disable "InvalidPackage"
+    }
+
+    defaultConfig {
+        applicationId "com.sd.euterpe"
+
+        minSdkVersion 24
+        targetSdkVersion 30
+
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties["keyAlias"]
+            keyPassword keystoreProperties["keyPassword"]
+            storeFile keystoreProperties["storeFile"] ? file(keystoreProperties["storeFile"]) : null
+            storePassword keystoreProperties["storePassword"]
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+flutter {
+    source "../.."
+}
+
+kapt {
+    arguments {
+        arg("eventBusIndex", "com.sd.euterpe.EventBusIndex")
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "com.arthenica:ffmpeg-kit-audio:4.4.LTS"
+    implementation "org.greenrobot:eventbus:3.2.0"
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
+    kapt "org.greenrobot:eventbus-annotation-processor:3.2.0"
+}
